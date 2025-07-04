@@ -1,2 +1,2 @@
 # ChessGUI
-Integrating python-chess into my own GUI
+Integrating the python-chess library into my own GUI.
