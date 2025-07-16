@@ -31,6 +31,8 @@ class ChessGUI:
         self.board = chess.Board()
         self.selected_square = None
         self.engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
+        
+        self.moves = []
 
         self.draw_board()
         self.canvas.bind("<Button-1>", self.on_click)
@@ -39,6 +41,14 @@ class ChessGUI:
         self.canvas.delete("all")
         # colors: white, black, blue (selection), brown (last move)
         colors = ["#F0D9B5", "#B58863", "#6CB0F5", "#C1A058"]
+        
+        if self.moves:
+            last_move = self.moves[-1]
+            from_file = chess.square_file(last_move.from_square)
+            from_rank = chess.square_rank(last_move.from_square)
+            to_file = chess.square_file(last_move.to_square)
+            to_rank = chess.square_rank(last_move.to_square)          
+                    
         for rank in range(8):
             for file in range(8):
                 x1 = file * TILE_SIZE
@@ -48,6 +58,8 @@ class ChessGUI:
                 square = chess.square(file, rank)
                 if square is self.selected_square:
                     color = colors[2]
+                elif self.moves and ((file == from_file and rank == from_rank) or (file == to_file and rank == to_rank)):
+                    color = colors[3]                    
                 else:
                     color = colors[(file + rank) % 2]
                 self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")
@@ -73,6 +85,7 @@ class ChessGUI:
                 self.selected_square = None                
                 self.draw_board()
                 self.root.after(200, self.engine_move)
+                self.moves.append(move);
             else:
                 self.selected_square = None
                 self.draw_board()
@@ -80,7 +93,9 @@ class ChessGUI:
     def engine_move(self):
         if not self.board.is_game_over():
             result = self.engine.play(self.board, chess.engine.Limit(time=0.1))
-            self.board.push(result.move)
+            move = result.move
+            self.moves.append(move)
+            self.board.push(move)
             self.draw_board()
 
     def on_closing(self):
