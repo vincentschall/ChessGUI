@@ -63,7 +63,7 @@ class ChessGUI:
 
         if self.selected_square is None:
             piece = self.board.piece_at(square)
-            if piece and piece.color == chess.WHITE:  # Only allow human (white) moves
+            if piece and piece.color == chess.WHITE:
                 self.selected_square = square
                 self.draw_board()
         else:
