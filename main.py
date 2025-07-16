@@ -37,7 +37,7 @@ class ChessGUI:
 
     def draw_board(self):
         self.canvas.delete("all")
-        colors = ["#EEEED2", "#769656"]
+        colors = ["#F0D9B5", "#B58863"]
         for rank in range(8):
             for file in range(8):
                 x1 = file * TILE_SIZE
