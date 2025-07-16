@@ -37,14 +37,19 @@ class ChessGUI:
 
     def draw_board(self):
         self.canvas.delete("all")
-        colors = ["#F0D9B5", "#B58863"]
+        # colors: white, black, blue (selection), brown (last move)
+        colors = ["#F0D9B5", "#B58863", "#6CB0F5", "#C1A058"]
         for rank in range(8):
             for file in range(8):
                 x1 = file * TILE_SIZE
                 y1 = (7 - rank) * TILE_SIZE
                 x2 = x1 + TILE_SIZE
                 y2 = y1 + TILE_SIZE
-                color = colors[(file + rank) % 2]
+                square = chess.square(file, rank)
+                if square is self.selected_square:
+                    color = colors[2]
+                else:
+                    color = colors[(file + rank) % 2]
                 self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")
                 piece = self.board.piece_at(chess.square(file, rank))
                 if piece:
@@ -60,12 +65,13 @@ class ChessGUI:
             piece = self.board.piece_at(square)
             if piece and piece.color == chess.WHITE:  # Only allow human (white) moves
                 self.selected_square = square
+                self.draw_board()
         else:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
                 self.board.push(move)
+                self.selected_square = None                
                 self.draw_board()
-                self.selected_square = None
                 self.root.after(200, self.engine_move)
             else:
                 self.selected_square = None
