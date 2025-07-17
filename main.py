@@ -32,6 +32,7 @@ class ChessGUI:
         self.images = load_images()
         self.board = chess.Board()
         self.selected_square = None
+        self.possibleSquares = []
         self.engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
         self.moves = []
         self.draw_board()
@@ -40,6 +41,7 @@ class ChessGUI:
     # === (Re-)draws the board ===
     def draw_board(self):
         self.canvas.delete("all")
+        self.updatePossibleMoves()
         # colors:
         # light squares, dark squares
         # selected square
@@ -108,6 +110,14 @@ class ChessGUI:
             self.moves.append(move)
             self.board.push(move)
             self.draw_board()
+            
+    def updatePossibleMoves(self):
+        self.possibleSquares = []
+        if self.selected_square:
+            legal_moves = self.board.legal_moves
+            for move in legal_moves:
+                if self.selected_square is move.from_square:
+                    self.possibleSquares.append(move.to_square)
 
     # === Closing the app ===
     def on_closing(self):
