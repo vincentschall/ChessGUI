@@ -125,7 +125,7 @@ class ChessGUI:
                 if self.selected_square is move.from_square:
                     self.possibleSquares.append(move.to_square)
                     
-    def draw_dot(self, file, rank, radius=8, color="black"):
+    def draw_dot(self, file, rank, radius=8, color="#8B6848"):
         x = file * TILE_SIZE + TILE_SIZE // 2
         y = (7 - rank) * TILE_SIZE + TILE_SIZE // 2
         self.canvas.create_oval(
