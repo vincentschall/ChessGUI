@@ -22,6 +22,8 @@ def load_images():
 
 # === GUI Class ===
 class ChessGUI:
+    
+    # === Initialize global variables ===
     def __init__(self, root):
         self.root = root
         self.root.title("Chess GUI with Stockfish")
@@ -31,12 +33,11 @@ class ChessGUI:
         self.board = chess.Board()
         self.selected_square = None
         self.engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
-        
         self.moves = []
-
         self.draw_board()
         self.canvas.bind("<Button-1>", self.on_click)
 
+    # === (Re-)draws the board ===
     def draw_board(self):
         self.canvas.delete("all")
         # colors:
@@ -52,7 +53,7 @@ class ChessGUI:
             from_rank = chess.square_rank(last_move.from_square)
             to_file = chess.square_file(last_move.to_square)
             to_rank = chess.square_rank(last_move.to_square)          
-                    
+            
         for rank in range(8):
             for file in range(8):
                 x1 = file * TILE_SIZE
@@ -72,6 +73,7 @@ class ChessGUI:
                     img_key = f"{'w' if piece.color == chess.WHITE else 'b'}{piece.symbol().upper()}"
                     self.canvas.create_image(x1, y1, anchor="nw", image=self.images[img_key])
 
+    # === Event Handler ===
     def on_click(self, event):
         file = event.x // TILE_SIZE
         rank = 7 - (event.y // TILE_SIZE)
@@ -98,6 +100,7 @@ class ChessGUI:
                     self.selected_square = None
                 self.draw_board()
 
+    # === Handles Engine Moves ===
     def engine_move(self):
         if not self.board.is_game_over():
             result = self.engine.play(self.board, chess.engine.Limit(time=0.1))
@@ -106,6 +109,7 @@ class ChessGUI:
             self.board.push(move)
             self.draw_board()
 
+    # === Closing the app ===
     def on_closing(self):
         self.engine.quit()
         self.root.destroy()
