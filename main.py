@@ -39,8 +39,14 @@ class ChessGUI:
 
     def draw_board(self):
         self.canvas.delete("all")
-        # colors: white, black, blue (selection), brown (last move)
-        colors = ["#F0D9B5", "#B58863", "#6CB0F5", "#C1A058"]
+        # colors:
+        # light squares
+        # dark squares
+        # selected square
+        # light sqaure (last move)
+        # dark square (last move)
+        # king in check
+        colors = ["#F0D9B5", "#B58863", "#6CB0F5", "#FFD474", "#C1A058", "#FF5454"]
         
         if self.moves:
             last_move = self.moves[-1]
@@ -59,7 +65,7 @@ class ChessGUI:
                 if square is self.selected_square:
                     color = colors[2]
                 elif self.moves and ((file == from_file and rank == from_rank) or (file == to_file and rank == to_rank)):
-                    color = colors[3]                    
+                    color = colors[((file + rank) % 2) + 3]                 
                 else:
                     color = colors[(file + rank) % 2]
                 self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")
