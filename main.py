@@ -40,11 +40,9 @@ class ChessGUI:
     def draw_board(self):
         self.canvas.delete("all")
         # colors:
-        # light squares
-        # dark squares
+        # light squares, dark squares
         # selected square
-        # light sqaure (last move)
-        # dark square (last move)
+        # light square (last move), dark square (last move)
         # king in check
         colors = ["#F0D9B5", "#B58863", "#6CB0F5", "#FFD474", "#C1A058", "#FF5454"]
         
