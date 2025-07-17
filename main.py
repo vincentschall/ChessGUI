@@ -86,10 +86,10 @@ class ChessGUI:
             move = chess.Move(self.selected_square, square)
             if move in self.board.legal_moves:
                 self.board.push(move)
-                self.selected_square = None     
+                self.selected_square = None  
+                self.moves.append(move);    
                 self.draw_board()
-                self.root.after(200, self.engine_move)
-                self.moves.append(move);  
+                self.root.after(200, self.engine_move) 
             else:
                 piece = self.board.piece_at(square)
                 if piece and piece.color == chess.WHITE:
