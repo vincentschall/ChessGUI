@@ -70,6 +70,8 @@ class ChessGUI:
                 else:
                     color = colors[(file + rank) % 2]
                 self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")
+                if square in self.possibleSquares:
+                        self.draw_dot(file, rank)
                 piece = self.board.piece_at(chess.square(file, rank))
                 if piece:
                     img_key = f"{'w' if piece.color == chess.WHITE else 'b'}{piece.symbol().upper()}"
@@ -118,6 +120,15 @@ class ChessGUI:
             for move in legal_moves:
                 if self.selected_square is move.from_square:
                     self.possibleSquares.append(move.to_square)
+                    
+    def draw_dot(self, file, rank, radius=8, color="black"):
+        x = file * TILE_SIZE + TILE_SIZE // 2
+        y = (7 - rank) * TILE_SIZE + TILE_SIZE // 2
+        self.canvas.create_oval(
+            x - radius, y - radius,
+            x + radius, y + radius,
+            fill=color, outline=""
+        )
 
     # === Closing the app ===
     def on_closing(self):
