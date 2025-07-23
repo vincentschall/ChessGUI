@@ -93,6 +93,9 @@ class ChessGUI:
 
     # === Event Handler ===
     def on_click(self, event):
+        if self.play_vs_engine and self.board.turn == chess.BLACK:
+            return
+        
         file = event.x // TILE_SIZE
         rank = 7 - (event.y // TILE_SIZE)
         square = chess.square(file, rank)
@@ -122,12 +125,13 @@ class ChessGUI:
 
     # === Handles Engine Moves ===
     def engine_move(self):
-        if not self.board.is_game_over():
+        if not self.board.is_game_over() and self.board.turn == chess.BLACK:
             result = self.engine.play(self.board, chess.engine.Limit(time=0.1))
             move = result.move
             self.moves.append(move)
             self.board.push(move)
             self.draw_board()
+
             
     def updatePossibleMoves(self):
         self.possibleSquares = []
@@ -181,9 +185,9 @@ class MainMenu:
     def launch_gui(self, play_vs_engine=False, pgn_path=None):
         for widget in self.root.winfo_children():
             widget.destroy()
-        ChessGUI(self.root, play_vs_engine, pgn_path)
-        self.root.protocol("WM_DELETE_WINDOW", self.root.quit)
-        
+        self.gui = ChessGUI(self.root, play_vs_engine, pgn_path)
+        self.root.protocol("WM_DELETE_WINDOW", self.gui.on_closing)
+
 # === Run App ===
 if __name__ == "__main__":
     root = tk.Tk()
