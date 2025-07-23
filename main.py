@@ -2,6 +2,7 @@ import chess
 import chess.engine
 import os
 import tkinter as tk
+from tkinter import filedialog
 from PIL import Image, ImageTk
 
 # === Configuration ===
@@ -24,17 +25,30 @@ def load_images():
 class ChessGUI:
     
     # === Initialize global variables ===
-    def __init__(self, root):
+    def __init__(self, root, play_vs_engine=False, pgn_path=None):
         self.root = root
-        self.root.title("Chess GUI with Stockfish")
+        self.root.title("Chess GUI")
         self.canvas = tk.Canvas(root, width=8*TILE_SIZE, height=8*TILE_SIZE)
         self.canvas.pack()
         self.images = load_images()
         self.board = chess.Board()
         self.selected_square = None
         self.possibleSquares = []
-        self.engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
         self.moves = []
+        self.play_vs_engine = play_vs_engine
+        
+        if play_vs_engine:
+            self.engine = chess.engine.SimpleEngine.popen_uci(STOCKFISH_PATH)
+        else:
+            self.engine = None
+        
+        if pgn_path:
+            with open(pgn_path, 'r') as pgn_file:
+                game = chess.pgn.read_game(pgn_file)
+                self.board = game.board()
+                for move in game.mainline_moves():
+                    self.board.push(move)   
+                
         self.draw_board()
         self.canvas.bind("<Button-1>", self.on_click)
 
@@ -85,7 +99,7 @@ class ChessGUI:
 
         if self.selected_square is None:
             piece = self.board.piece_at(square)
-            if piece and piece.color == chess.WHITE:
+            if piece and piece.color == self.board.turn:
                 self.selected_square = square
                 self.draw_board()
         elif self.selected_square is square:
@@ -99,13 +113,11 @@ class ChessGUI:
                 self.selected_square = None  
                 self.moves.append(move);    
                 self.draw_board()
-                self.root.after(200, self.engine_move) 
+                if self.play_vs_engine:
+                    self.root.after(200, self.engine_move) 
             else:
                 piece = self.board.piece_at(square)
-                if piece and piece.color == chess.WHITE:
-                    self.selected_square = square
-                else:
-                    self.selected_square = None
+                self.selected_square = square if piece and piece.color == self.board.turn else None
                 self.draw_board()
 
     # === Handles Engine Moves ===
@@ -136,12 +148,44 @@ class ChessGUI:
 
     # === Closing the app ===
     def on_closing(self):
-        self.engine.quit()
+        if self.engine:
+            self.engine.quit()
         self.root.destroy()
+        
+class MainMenu:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Chess Menu")
+
+        tk.Button(root, text="Play Against Human", width=30, height=2,
+                  command=self.play_vs_human).pack(pady=10)
+
+        tk.Button(root, text="Play Against Stockfish", width=30, height=2,
+                  command=self.play_vs_engine).pack(pady=10)
+
+        tk.Button(root, text="Upload PGN to Analyse", width=30, height=2,
+                  command=self.upload_pgn).pack(pady=10)
+
+    def play_vs_human(self):
+        self.launch_gui(play_vs_engine=False)
+
+    def play_vs_engine(self):
+        self.launch_gui(play_vs_engine=True)
+
+    def upload_pgn(self):
+        from tkinter import filedialog
+        pgn_path = filedialog.askopenfilename(filetypes=[("PGN files", "*.pgn")])
+        if pgn_path:
+            self.launch_gui(play_vs_engine=False, pgn_path=pgn_path)
+
+    def launch_gui(self, play_vs_engine=False, pgn_path=None):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        ChessGUI(self.root, play_vs_engine, pgn_path)
+        self.root.protocol("WM_DELETE_WINDOW", self.root.quit)
         
 # === Run App ===
 if __name__ == "__main__":
     root = tk.Tk()
-    gui = ChessGUI(root)
-    root.protocol("WM_DELETE_WINDOW", gui.on_closing)
+    menu = MainMenu(root)
     root.mainloop()
