@@ -84,12 +84,12 @@ class ChessGUI:
                 else:
                     color = colors[(file + rank) % 2]
                 self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")
-                if square in self.possibleSquares:
-                        self.draw_dot(file, rank)
                 piece = self.board.piece_at(chess.square(file, rank))
                 if piece:
                     img_key = f"{'w' if piece.color == chess.WHITE else 'b'}{piece.symbol().upper()}"
                     self.canvas.create_image(x1, y1, anchor="nw", image=self.images[img_key])
+                if square in self.possibleSquares:
+                    self.draw_dot(file, rank)
 
     # === Event Handler ===
     def on_click(self, event):
