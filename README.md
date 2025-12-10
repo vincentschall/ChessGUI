@@ -20,5 +20,5 @@ Using conda (recommended):
 - `conda create -n chessgui python=3.12`
 - `conda activate chessgui`
 - `conda install python-chess pillow`  
-If you want to play against an engine or analyse PGN files, you will need to download Stockfish and set the correct path to the executable at the top of main.py.  
+If you want to play against an engine or analyze PGN files, you will need to download Stockfish and set the correct path to the executable at the top of main.py.  
 Now you can run the app with `python3 main.py`!
