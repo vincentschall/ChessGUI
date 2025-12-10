@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 # === Configuration ===
 TILE_SIZE = 64
 PIECE_PATH = "images/"
-STOCKFISH_PATH = "C://Users/vince/Documents/stockfish/stockfish-windows-x86-64-avx2.exe"
+STOCKFISH_PATH = "/home/vincent/documents/programme/stockfish/stockfish-ubuntu-x86-64-avx2"
 
 # === Load Piece Images
 def load_images():
@@ -126,6 +126,7 @@ class ChessGUI:
     # === Handles Engine Moves ===
     def engine_move(self):
         if not self.board.is_game_over() and self.board.turn == chess.BLACK:
+            # adapt the time setting here for stronger engine performance
             result = self.engine.play(self.board, chess.engine.Limit(time=0.1))
             move = result.move
             self.moves.append(move)
