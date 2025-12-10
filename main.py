@@ -1,5 +1,6 @@
 import chess
 import chess.engine
+import chess.pgn
 import os
 import tkinter as tk
 from tkinter import filedialog
