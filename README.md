@@ -14,3 +14,10 @@ Integrating the python-chess library into my own GUI.
 - [ ] Menu
 - [ ] Drag and drop
 - [ ] Analyzing PGN Files
+
+## Installation
+Using conda (recommended):  
+- `conda create -n chessgui python=3.12`
+- `conda activate chessgui`
+- `conda install python-chess pillow`  
+Now you can run the app with `python3 main.py`
