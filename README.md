@@ -1,5 +1,5 @@
 # ChessGUI
-Integrating the python-chess library into my own GUI.
+Integrating the python-chess library and stockfish into my own GUI.
 
 ## Abilities
 - Play against AI (stockfish)
@@ -11,7 +11,7 @@ Integrating the python-chess library into my own GUI.
 - [x] Colors and images
 - [x] Making moves
 - [x] Integrating stockfish
-- [ ] Menu
+- [x] Menu
 - [ ] Drag and drop
 - [ ] Analyzing PGN Files
 
