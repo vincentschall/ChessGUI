@@ -1,6 +1,10 @@
 # ChessGUI
 Integrating the python-chess library and stockfish into my own GUI.
 
+<p align="center">
+  <img src="https://github.com/vincentschall/ChessGUI/blob/main/images/demo.png" />
+</p>
+
 ## Abilities
 - Play against AI (stockfish)
 - Play against human (offline)
